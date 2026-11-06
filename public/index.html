@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YIN-YANG CODE PROTECT</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0d0b14;color:#f5f0ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#30234c,#0d0b14 65%);min-height:100vh}
+main{max-width:760px;margin:auto;padding:32px 18px}header{display:flex;gap:14px;align-items:center;margin:20px 0 30px}
+header b{font-size:42px;color:#c4a2ff}h1{font-size:clamp(19px,4vw,27px);margin:0}header p,#desc,footer{color:#aaa2b8}
+section,.panel{background:#191622;border:1px solid #40364f;border-radius:18px;padding:24px;box-shadow:0 16px 50px #0006;margin-bottom:24px}
+small{color:#c3a3ff;letter-spacing:.15em;font-weight:bold}h2{margin:10px 0}
+label{display:block;margin:18px 0 6px;font-weight:600;font-size:14px;color:#dcd4ec}
+input,select,textarea{width:100%;padding:13px;background:#0e0c14;border:1px solid #574a69;border-radius:9px;color:white;font-size:15px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#9d72f3}textarea{font-family:ui-monospace,monospace;resize:vertical;line-height:1.5}
+button{margin-top:14px;padding:13px 18px;border:0;border-radius:9px;background:#8055d8;color:white;font-weight:bold;font-size:15px;cursor:pointer;width:100%}
+button:hover{background:#9469ed}button:disabled{opacity:.6;cursor:not-allowed}.secondary{background:#40364f}.secondary:hover{background:#534767}
+#msg,#adminMsg,.message{min-height:24px;color:#ff9b9b;margin-top:10px;font-size:14px}.success-msg{color:#82ecad!important}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:500px;overflow:auto;background:#09080e;padding:15px;border-radius:9px;border:1px solid #2e263d}
+.note{font-size:12px;color:#c6b8dd;line-height:1.6}.resulthead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.resulthead button{width:auto;margin-top:0;padding:8px 14px;font-size:13px}footer{text-align:center;margin:30px;font-size:12px}a{color:#c9aaff;word-break:break-all}
+.nav-tabs{display:flex;gap:10px;margin-bottom:20px}.nav-tabs button{margin-top:0;flex:1}.badge{display:inline-block;background:#34274c;color:#d1b8ff;padding:4px 10px;border-radius:6px;font-size:12px;margin-bottom:10px;border:1px solid #574577}
+[hidden]{display:none!important}
+.auth-shell{max-width:560px;margin:7vh auto;padding:18px}.auth-panel{text-align:center}
+.robot{font-size:76px;line-height:1.2;filter:grayscale(1)}.muted{color:#aaa2b8;font-size:14px;line-height:1.6}
+.checkline{display:flex;align-items:center;gap:12px;text-align:left;background:#100e18;border:1px solid #514662;padding:14px;border-radius:10px;margin-top:18px}
+.checkline input{width:20px;height:20px;accent-color:#9d72f3}.progress{height:12px;background:#0c0a11;border:1px solid #514662;border-radius:99px;overflow:hidden;margin:20px 0 8px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,#7650c8,#c4a2ff);transition:width .2s}
+.progress-row{display:flex;justify-content:space-between;color:#cbbce1;font-size:13px}
+.profilebar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;padding:12px 16px;background:#171321;border:1px solid #40364f;border-radius:12px}
+.profilebar button{width:auto;margin:0;padding:8px 14px}
+.modal-bg{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:999}
+.modal-box{background:#191622;border:1px solid #574a69;border-radius:16px;padding:24px;width:90%;max-width:480px;box-shadow:0 20px 60px #000}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.modal-header h3{margin:0;color:#c4a2ff}
+.close-btn{background:none;border:none;color:#aaa2b8;font-size:20px;cursor:pointer;padding:0;width:auto;margin:0}
+.script-card{background:#0e0c14;border:1px solid #3c324c;border-radius:10px;padding:14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.script-card h4{margin:0 0 4px 0;color:#e2d9f3}
+.script-card p{margin:0;font-size:13px;color:#a497bd}
+.timer-text{font-weight:bold;color:#ffd479;margin-left:6px}
+</style>
+</head>
+<body>
+
+<!-- Startup & Security Gate -->
+<div id="startup" class="auth-shell">
+  <!-- Step 1: Human Verification (30 Seconds Wait) -->
+  <section id="humanStep" class="auth-panel">
+    <div class="robot">🤖</div><small>SECURITY CHECK</small><h2>ยืนยันตัวตนเบื้องต้น (ไม่ใช่หุ่นยนต์)</h2>
+    <p class="muted">โปรดทำเครื่องหมายยืนยันและรอระบบตรวจสอบความปลอดภัยประมาณ 30 วินาที</p>
+    <label class="checkline"><input id="humanCheck" type="checkbox"><span>ฉันเป็นมนุษย์และต้องการเข้าสู่เว็บไซต์</span></label>
+    <button id="humanContinue" disabled>ดำเนินการต่อ (<span id="verifyTimer">30</span> วินาที)</button>
+    <p id="humanMsg" class="message"></p>
+  </section>
+  
+  <!-- Step 2: Download Resources & Sync Data -->
+  <section id="syncStep" hidden class="auth-panel">
+    <small>RESOURCE & DATA SYNC</small><h2>กำลังดาวน์โหลดทรัพยากรและซิงค์ข้อมูล</h2>
+    <p class="muted">กำลังเชื่อมโยงและซิงค์ข้อมูลไฟล์บันทึกเว็บไซต์ ทรัพยากรระบบ และข้อมูลแคชในอุปกรณ์</p>
+    <div class="progress"><div id="syncBar"></div></div>
+    <div class="progress-row"><span id="syncStatusText">กำลังดาวน์โหลดทรัพยากร...</span><b id="syncPct">0%</b></div>
+  </section>
+</div>
+
+<!-- Main Application Site -->
+<div id="site" hidden>
+<main>
+<!-- Profile Bar & Check-in Header -->
+<div class="profilebar">
+  <div>
+    <b id="profileName">บัญชีผู้ใช้</b>
+    <div id="checkinBadge" class="muted" style="font-size:12px; color:#82ecad;">✓ เช็กอินวันนี้แล้ว</div>
+  </div>
+  <button id="openAccountCenter" class="secondary">จัดการบัญชี / โปรไฟล์</button>
+</div>
+
+<header><b>☯</b><div><h1>YIN-YANG CODE PROTECT</h1><p>ระบบเผยแพร่สคริปต์และโค้ดพร้อมการเข้ารหัสความปลอดภัย</p></div></header>
+
+<!-- Navigation Tabs -->
+<div class="nav-tabs">
+  <button id="tabUser">เข้าถึงโค้ด (User)</button>
+  <button id="tabBrowser" class="secondary">คลังสคริปต์ (Browser)</button>
+  <button id="tabAdmin" class="secondary">จัดการโค้ด (Admin)</button>
+</div>
+
+<!-- Section 1: User Unlock View -->
+<section id="userSection">
+  <small>PROTECTED SCRIPT / POST</small><h2 id="alias">กำลังโหลด...</h2><div id="langBadge" class="badge" hidden></div><p id="desc"></p>
+  <label for="secret">รหัสผ่านเพื่อรับโค้ดจริง</label><input id="secret" type="password" placeholder="กรอกรหัสผ่านปลดล็อก" autocomplete="current-password">
+  <button id="unlock">ตรวจสอบและรับโค้ดฉบับเต็ม</button><p id="msg"></p>
+  <div id="result" hidden><div class="resulthead"><b id="codeLabel" style="color:#c4a2ff;">โค้ดจริงที่ได้รับการปลดล็อก</b><button id="copy" class="secondary">คัดลอกโค้ด</button></div><pre><code id="code"></code></pre><p class="note">🔒 โค้ดได้รับการยืนยันความถูกต้องเรียบร้อยแล้ว ท่านสามารถคัดลอกไปใช้งานได้ทันที</p></div>
+</section>
+
+<!-- Section 2: Browser Script Catalog -->
+<section id="browserSection" hidden>
+  <small>SCRIPT BROWSER & SYNC STORE</small><h2>คลังสคริปต์ที่ซิงค์ไว้ในระบบ</h2>
+  <p class="muted">รายการสคริปต์และหมวดหมู่ทั้งหมดที่ถูกบันทึกไว้ในระบบซิงค์ข้อมูลไฟล์</p>
+  <div id="scriptCatalogList">
+    <p class="muted" style="text-align:center; padding:20px;">กำลังโหลดคลังสคริปต์...</p>
+  </div>
+</section>
+
+<!-- Section 3: Admin Management View -->
+<section id="adminSection" hidden>
+  <small>ADMIN MANAGEMENT</small><h2>สร้างและล็อกสคริปต์</h2><p style="color:#aaa2b8;font-size:14px;">ระบบสำหรับผู้ดูแลระบบ กรุณาป้อนรหัสผ่านเพื่อดำเนินการ</p>
+  <label for="adminToken">รหัสผ่านยืนยันสิทธิ์</label><input id="adminToken" type="password" placeholder="กรอกรหัสผ่านระบบ" autocomplete="current-password">
+  <label for="adminAlias">ชื่อโพสต์ / ชื่อสคริปต์</label><input id="adminAlias" placeholder="เช่น Roblox Key System / My Script">
+  <label for="adminDescription">รายละเอียดสคริปต์ (เปิดเผยสาธารณะ)</label><input id="adminDescription" placeholder="อธิบายการใช้งาน หรือข้อความแนะนำ">
+  <label for="adminLanguage">ประเภท / หมวดหมู่โค้ด</label><select id="adminLanguage">
+    <optgroup label="ภาษาทั่วไป"><option value="javascript">JavaScript</option><option value="python">Python</option><option value="lua">Lua / Luau (Roblox)</option><option value="html">HTML</option><option value="css">CSS</option><option value="text">ข้อความ / สคริปต์ทั่วไป</option></optgroup>
+    <optgroup label="หมวดหมู่พิเศษ (Lock Script - เข้ารหัสในตัว)"><option value="lock-js">Lock Script - JavaScript Obfuscator</option><option value="lock-lua">Lock Script - Lua/Luau Obfuscator</option><option value="lock-python">Lock Script - Python Bytecode/Encoder</option></optgroup>
+  </select>
+  <label for="adminExpires">วันหมดอายุ (ไม่บังคับ)</label><input id="adminExpires" type="datetime-local">
+  <label for="adminCode">ซอร์สโค้ดฉบับจริง (Source Code)</label><textarea id="adminCode" rows="12" spellcheck="false" placeholder="วางโค้ดที่คุณต้องการปกป้องที่นี่..."></textarea>
+  <button id="adminCreate">สร้างสคริปต์และรับรหัสผ่านผู้ใช้</button><p id="adminMsg"></p>
+  <div id="adminResult" hidden><h3 style="color:#82ecad;margin-top:15px;">บันทึกและซิงค์ข้อมูลสำเร็จ!</h3><p style="font-size:14px;">ลิงก์สำหรับผู้ใช้: <a id="adminUrl" target="_blank" rel="noopener"></a></p>
+  <label style="color:#ffd479;">รหัสผ่านลับสำหรับแจกผู้ใช้ (แสดงครั้งเดียว):</label><input id="adminSecret" readonly style="border-color:#ffd479;color:#ffd479;font-weight:bold;"><button id="copySecret" class="secondary">คัดลอกรหัสผ่านลับ</button></div>
+</section><footer>YIN-YANG CODE PROTECT</footer>
+</main>
+</div>
+
+<!-- Modal Account Center (จัดการบัญชี / โปรไฟล์) -->
+<div id="accountModal" class="modal-bg" hidden>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>การจัดการบัญชีผู้ใช้</h3>
+      <button id="closeAccountModal" class="close-btn">✕</button>
+    </div>
+    
+    <label for="modalUsername">ชื่อบัญชีปัจจุบัน</label>
+    <input id="modalUsername" type="text">
+    
+    <label for="modalPassword">รหัสผ่านปัจจุบัน / รหัสผ่านใหม่</label>
+    <input id="modalPassword" type="password" placeholder="กรอกรหัสผ่านใหม่เพื่อเปลี่ยน">
+    
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button id="btnUpdateProfile" style="flex:1;">บันทึกการเปลี่ยนชื่อ / รหัสผ่าน</button>
+    </div>
+
+    <hr style="border:0; border-top:1px solid #40364f; margin:18px 0;">
+    
+    <button id="btnDownloadBackup" class="secondary" style="margin-top:0;">📥 ดาวน์โหลดไฟล์บันทึกซิงค์ข้อมูล (Backup JSON)</button>
+    
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button id="btnSwitchAccount" class="secondary" style="flex:1; margin-top:0;">เปลี่ยนบัญชี</button>
+      <button id="btnLogoutModal" class="secondary" style="flex:1; margin-top:0; background:#793030;">ออกจากระบบ</button>
+    </div>
+    <p id="modalMsg" class="message"></p>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const SYNC_STORAGE_KEY = "yycp_local_sync_data_v1";
+
+let timerCount = 30;
+const humanCheck = $("#humanCheck");
+const humanContinue = $("#humanContinue");
+const verifyTimer = $("#verifyTimer");
+
+const countdown = setInterval(() => {
+  timerCount--;
+  verifyTimer.textContent = timerCount;
+  if (timerCount <= 0) {
+    clearInterval(countdown);
+    verifyTimer.textContent = "0";
+    if (humanCheck.checked) humanContinue.disabled = false;
+  }
+}, 1000);
+
+humanCheck.onchange = () => {
+  if (timerCount <= 0 && humanCheck.checked) {
+    humanContinue.disabled = false;
+  } else if (!humanCheck.checked) {
+    humanContinue.disabled = true;
+  }
+};
+
+humanContinue.onclick = () => {
+  $("#humanStep").hidden = true;
+  $("#syncStep").hidden = false;
+  
+  let pct = 0;
+  const syncBar = $("#syncBar");
+  const syncPct = $("#syncPct");
+  const syncStatusText = $("#syncStatusText");
+  
+  const progressInterval = setInterval(() => {
+    pct += 2;
+    syncBar.style.width = pct + "%";
+    syncPct.textContent = pct + "%";
+    
+    if (pct === 30) syncStatusText.textContent = "กำลังดาวน์โหลดไฟล์บันทึกซิงค์...";
+    if (pct === 70) syncStatusText.textContent = "กำลังซิงค์หมวดหมู่สคริปต์...";
+    
+    if (pct >= 100) {
+      clearInterval(progressInterval);
+      $("#startup").hidden = true;
+      $("#site").hidden = false;
+      initApp();
+    }
+  }, 60);
+};
+
+function initApp() {
+  loadPostInfo();
+  loadScriptCatalog();
+  $("#profileName").textContent = localStorage.getItem("yycp_username") || "ผู้ใช้งานสมาชิก";
+}
+
+const tabUser = $("#tabUser"), tabBrowser = $("#tabBrowser"), tabAdmin = $("#tabAdmin");
+const userSection = $("#userSection"), browserSection = $("#browserSection"), adminSection = $("#adminSection");
+
+function resetTabs() {
+  [userSection, browserSection, adminSection].forEach(s => s.hidden = true);
+  [tabUser, tabBrowser, tabAdmin].forEach(b => b.classList.add("secondary"));
+}
+
+tabUser.onclick = () => { resetTabs(); userSection.hidden = false; tabUser.classList.remove("secondary"); };
+tabBrowser.onclick = () => { resetTabs(); browserSection.hidden = false; tabBrowser.classList.remove("secondary"); loadScriptCatalog(); };
+tabAdmin.onclick = () => { resetTabs(); adminSection.hidden = false; tabAdmin.classList.remove("secondary"); };
+
+const accountModal = $("#accountModal");
+$("#openAccountCenter").onclick = () => {
+  accountModal.hidden = false;
+  $("#modalUsername").value = localStorage.getItem("yycp_username") || "ผู้ใช้งานสมาชิก";
+};
+$("#closeAccountModal").onclick = () => accountModal.hidden = true;
+
+$("#btnUpdateProfile").onclick = () => {
+  const newName = $("#modalUsername").value.trim();
+  if (newName) {
+    localStorage.setItem("yycp_username", newName);
+    $("#profileName").textContent = newName;
+    $("#modalMsg").textContent = "อัปเดตข้อมูลโปรไฟล์เรียบร้อยแล้ว!";
+    $("#modalMsg").classList.add("success-msg");
+  }
+};
+
+$("#btnDownloadBackup").onclick = () => {
+  const localData = localStorage.getItem(SYNC_STORAGE_KEY) || "[]";
+  const blob = new Blob([localData], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "YinYang_Backup_SyncData.json";
+  a.click();
+};
+
+$("#btnSwitchAccount").onclick = $("#btnLogoutModal").onclick = () => {
+  localStorage.removeItem("yycp_username");
+  location.reload();
+};
+
+const urlParams = new URLSearchParams(window.location.search), postId = urlParams.get("post");
+async function loadPostInfo() {
+  if (!postId) {
+    $("#alias").textContent = "ระบบพร้อมใช้งาน";
+    $("#desc").textContent = "กรุณาระบุ ?post=ID บน URL หรือสลับไปแท็บ Admin เพื่อสร้างโพสต์ใหม่";
+    return;
+  }
+  try {
+    let r = await fetch("/api/posts/" + encodeURIComponent(postId));
+    let d = await r.json();
+    if (!r.ok) throw Error(d.error || "ไม่พบโพสต์นี้ในระบบ");
+    $("#alias").textContent = d.alias || "Protected Post";
+    $("#desc").textContent = d.description || "ไม่มีรายละเอียดเพิ่มเติม";
+    if (d.language) {
+      $("#langBadge").textContent = "หมวดหมู่: " + d.language.toUpperCase();
+      $("#langBadge").hidden = false;
+    }
+  } catch (e) {
+    $("#alias").textContent = "เกิดข้อผิดพลาด";
+    $("#msg").textContent = e.message;
+  }
+}
+
+$("#unlock").onclick = async () => {
+  if (!postId) { $("#msg").textContent = "ไม่พบ ID ของโพสต์ใน URL"; return; }
+  const secretVal = $("#secret").value.trim();
+  if (!secretVal) { $("#msg").textContent = "กรุณากรอกรหัสผ่าน"; return; }
+  $("#msg").textContent = "กำลังตรวจสอบรหัสผ่าน...";
+  try {
+    let r = await fetch("/api/posts/" + encodeURIComponent(postId) + "/unlock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret: secretVal })
+    });
+    let d = await r.json();
+    if (!r.ok) throw Error(d.error || "รหัสผ่านไม่ถูกต้อง");
+    $("#code").textContent = d.code;
+    $("#result").hidden = false;
+    $("#msg").textContent = "ปลดล็อกสำเร็จ!";
+    $("#msg").classList.add("success-msg");
+  } catch (e) { $("#msg").textContent = e.message; }
+};
+
+$("#copy").onclick = async () => {
+  await navigator.clipboard.writeText($("#code").textContent);
+  $("#copy").textContent = "คัดลอกแล้ว!";
+  setTimeout(() => $("#copy").textContent = "คัดลอกโค้ด", 2000);
+};
+
+$("#adminCreate").onclick = async () => {
+  const token = $("#adminToken").value.trim(), codeText = $("#adminCode").value;
+  if (!token || !codeText) { $("#adminMsg").textContent = "กรุณากรอกข้อมูลและรหัสยืนยันสิทธิ์ให้ครบ"; return; }
+
+  try {
+    let expires = $("#adminExpires").value ? new Date($("#adminExpires").value).toISOString() : null;
+    let r = await fetch("/api/admin/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+      body: JSON.stringify({
+        alias: $("#adminAlias").value.trim(),
+        description: $("#adminDescription").value.trim(),
+        language: $("#adminLanguage").value,
+        code: codeText,
+        expiresAt: expires
+      })
+    });
+    let d = await r.json();
+    if (!r.ok) throw Error(d.error || "เกิดข้อผิดพลาดในการสร้างโพสต์");
+
+    let syncList = JSON.parse(localStorage.getItem(SYNC_STORAGE_KEY) || "[]");
+    syncList.push({ id: d.post.id, alias: $("#adminAlias").value.trim(), language: $("#adminLanguage").value, secret: d.secret });
+    localStorage.setItem(SYNC_STORAGE_KEY, JSON.stringify(syncList));
+
+    const fullUrl = window.location.origin + window.location.pathname + "?post=" + d.post.id;
+    $("#adminUrl").href = fullUrl;
+    $("#adminUrl").textContent = fullUrl;
+    $("#adminSecret").value = d.secret;
+    $("#adminResult").hidden = false;
+    $("#adminMsg").textContent = "สร้างโพสต์เรียบร้อย! ข้อมูลถูกซิงค์ไปที่คลังสคริปต์แล้ว";
+    $("#adminMsg").classList.add("success-msg");
+
+    setTimeout(() => { tabBrowser.click(); }, 1800);
+  } catch (e) { $("#adminMsg").textContent = e.message; }
+};
+
+$("#copySecret").onclick = async () => {
+  await navigator.clipboard.writeText($("#adminSecret").value);
+  $("#copySecret").textContent = "คัดลอกสำเร็จ!";
+  setTimeout(() => $("#copySecret").textContent = "คัดลอกรหัสผ่านลับ", 2000);
+};
+
+async function loadScriptCatalog() {
+  const catalogList = $("#scriptCatalogList");
+  let syncList = JSON.parse(localStorage.getItem(SYNC_STORAGE_KEY) || "[]");
+  
+  try {
+    let r = await fetch("/api/posts");
+    if (r.ok) {
+      let apiPosts = await r.json();
+      apiPosts.forEach(p => {
+        if (!syncList.some(x => x.id === p.id)) syncList.push(p);
+      });
+    }
+  } catch (e) {}
+
+  if (syncList.length === 0) {
+    catalogList.innerHTML = `<p class="muted" style="text-align:center; padding:20px;">ยังไม่มีรายการสคริปต์ในคลังซิงค์ข้อมูล</p>`;
+    return;
+  }
+
+  catalogList.innerHTML = syncList.map(item => `
+    <div class="script-card">
+      <div>
+        <h4>${item.alias || 'Protected Script'}</h4>
+        <p>ID: ${item.id} | หมวดหมู่: ${(item.language || 'TEXT').toUpperCase()}</p>
+      </div>
+      <button class="secondary" style="width:auto; margin:0;" onclick="location.href='?post=${item.id}'">เข้าสู่หน้าสคริปต์</button>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+  </html>
+  
